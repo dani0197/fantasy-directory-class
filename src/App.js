@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import './App.css';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import Home from './components/Home.js';
+import About from './components/About.js';
+import Fentities from './components/Fentities.js';
+import Fentity from './components/Fentity.js';
 
 class App extends Component {
   constructor() {
     super()
+    let merlin = <span>trapped <Link to="Merlin">Merlin</Link> in a cave </span>
     this.state = {
       wizards: [
         { name: "Merlin", power: "Wisdom", other: "Helped King Arthur", imgUrl: "https://tinyurl.com/merlin-image" },
-        { name: "Morgana Le Fay", power: "Forces of Nature", other: "Trapped Merlin in a cave for eternity", imgUrl: "https://tinyurl.com/morgana-image" },
+        { name: "Morgana Le Fay", power: "Forces of Nature", other: merlin, imgUrl: "https://tinyurl.com/morgana-image" },
         { name: "Gandalf", power: "Plot Convenience", other: "Once broke a bridge", imgUrl: "https://tinyurl.com/gandalf-img" }
       ],
       bestiary: [
@@ -21,15 +27,22 @@ class App extends Component {
   render() {
     const state = this.state
     return (
-      <div className="App">
-        <div id="home-background"></div>
-        <div id="main-links">
-          {/* Main Links */}
+      <Router>
+        <div className="App">
+          <div id="home-background"></div>
+          <div id="main-links">
+            {/* Main Links */}
+            <Link to="/">Home</Link>
+            <Link to="/about">About</Link>
+          </div>
+          {/* Routes go here v */}
+          <Route path="/" exact component={Home} />
+          <Route path="/about" exact render={() => <About items={Object.keys(state)} />} />
+          <Route exact path="/directory/:fentities" render={({ match }) => <Fentities match={match} state={state} />} />
+          <Route exact path="/directory/:fentities/:name" render={({ match }) => <Fentity match={match} state={state} />} />
+          {/* Routes go here ^ */}
         </div>
-        {/* Routes go here v */}
-
-        {/* Routes go here ^ */}
-      </div>
+      </Router>
     );
   }
 }
